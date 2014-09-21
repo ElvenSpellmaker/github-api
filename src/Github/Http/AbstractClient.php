@@ -28,6 +28,9 @@ abstract class AbstractClient extends Github\Sanity implements IClient
 	/** @var callable|NULL */
 	private $onResponse;
 
+	/** @var bool */
+	protected $isFromCache = false;
+
 
 	/**
 	 * @see https://developer.github.com/v3/#http-redirects
@@ -96,6 +99,11 @@ abstract class AbstractClient extends Github\Sanity implements IClient
 	protected function setupRequest(Request $request)
 	{
 		$request->addHeader('Expect', '');
+	}
+
+	public function isFromCache()
+	{
+		return $this->isFromCache;
 	}
 
 

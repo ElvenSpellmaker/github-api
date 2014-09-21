@@ -53,6 +53,13 @@ class Response extends Message
 		return $this->code;
 	}
 
+	/**
+	 * Sets the code for the current request.
+	 */
+	public function setCode($code)
+	{
+		$this->code = $code;
+	}
 
 	/**
 	 * @param  int
@@ -86,6 +93,11 @@ class Response extends Message
 		$this->previous = $previous;
 
 		return $this;
+	}
+
+	public function isFromCache()
+	{
+		return $this->getCode() === static::S304_NOT_MODIFIED;
 	}
 
 }

@@ -256,7 +256,7 @@ class Api extends Sanity
 		}
 
 		$code = $response->getCode();
-		if (($okCodes === NULL && $code >= 300) || (is_array($okCodes) && !in_array($code, $okCodes))) {
+		if (($okCodes === NULL && $code >= 300 && $code != 304) || (is_array($okCodes) && !in_array($code, $okCodes))) {
 			/** @var $content \stdClass */
 			switch ($code) {
 				case Http\Response::S400_BAD_REQUEST:

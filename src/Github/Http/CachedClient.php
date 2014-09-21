@@ -22,6 +22,8 @@ class CachedClient extends Github\Sanity implements IClient
 	/** @var callable|NULL */
 	private $onResponse;
 
+	/** @var bool */
+	protected $isFromCache = false;
 
 	public function __construct(Storages\ICache $cache, IClient $client = NULL)
 	{
@@ -29,6 +31,15 @@ class CachedClient extends Github\Sanity implements IClient
 		$this->client = $client ?: Github\Helpers::createDefaultClient();
 	}
 
+	public function isFromCache()
+	{
+		return $this->isFromCache;
+	}
+
+	protected function setIsFromCache($isFromCache = false)
+	{
+		$this->isFromCache = (bool)$isFromCache;
+	}
 
 	/**
 	 * @return IClient
@@ -76,6 +87,11 @@ class CachedClient extends Github\Sanity implements IClient
 		if (isset($cached) && $response->getCode() === Response::S304_NOT_MODIFIED) {
 			/** @todo Should be responses somehow combined into one? */
 			$response = $cached->setPrevious($response);
+			$this->setIsFromCache(true);
+			$response->setCode(Response::S304_NOT_MODIFIED);
+		}
+		else {
+			$this->setIsFromCache();
 		}
 
 		$this->onResponse && call_user_func($this->onResponse, $response);
